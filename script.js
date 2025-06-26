@@ -94,6 +94,8 @@ const prestigeBox = document.getElementById('prestige-box');
 const autoBuyBox = document.getElementById('auto-buy-box');
 const autoBuyToggleBox = document.getElementById('auto-buy-toggle-box');
 const holdClickerUpgradeBox = document.getElementById('hold-clicker-upgrade-box');
+const autoClickerToggleBox = document.getElementById('auto-clicker-onoff-toggle-box');
+const fastAutoClickerToggleBox = document.getElementById('fast-auto-clicker-onoff-toggle-box');
 const autoClickerBuyerBox = document.getElementById('auto-clicker-buyer-box');
 const autoClickerBuyerToggleBox = document.getElementById('auto-clicker-buyer-toggle-box');
 const clickUpgraderBuyerBox = document.getElementById('click-upgrader-buyer-box');
@@ -104,8 +106,6 @@ const fastAutoClickerBuyerBox = document.getElementById('fast-auto-clicker-buyer
 const fastAutoClickerBuyerToggleBox = document.getElementById('fast-auto-clicker-buyer-toggle-box');
 const clickMultiplierBuyerBox = document.getElementById('click-multiplier-buyer-box');
 const clickMultiplierBuyerToggleBox = document.getElementById('click-multiplier-buyer-toggle-box');
-const autoClickerToggleBox = document.getElementById('auto-clicker-onoff-toggle-box');
-const fastAutoClickerToggleBox = document.getElementById('fast-auto-clicker-onoff-toggle-box');
 
 // Settings modal and controls
 const settingsBtn = document.getElementById('settings-btn');
@@ -246,12 +246,11 @@ tabs.forEach(tab => {
   });
 });
 
-// ========== TOOLTIP BUTTON HELPERS ==========
-function makeTooltipHtml(label, tooltip) {
-  if (!tooltip) return label;
-  return `<span class="tooltip-container">${label}<span class="tooltip-text">${tooltip.replace(/\n/g,'<br>')}</span></span>`;
+// ========== HELPER BUTTON CREATORS WITHOUT TOOLTIP ==========
+function makeTooltipHtml(label) {
+  return label; // NO TOOLTIP TEXT
 }
-function createOrUpdateButton(container, id, label, enabled, extraClass = "", tooltip = "") {
+function createOrUpdateButton(container, id, label, enabled, extraClass = "") {
   let btn = container.querySelector(`#${id}`);
   if (!btn) {
     btn = document.createElement('button');
@@ -259,12 +258,12 @@ function createOrUpdateButton(container, id, label, enabled, extraClass = "", to
     btn.className = `upgrade-btn${extraClass ? " " + extraClass : ""}`;
     container.appendChild(btn);
   }
-  btn.innerHTML = makeTooltipHtml(label, tooltip);
+  btn.innerHTML = makeTooltipHtml(label);
   btn.disabled = !enabled;
   btn.className = `upgrade-btn${enabled ? " can-afford" : ""}${extraClass ? " " + extraClass : ""}`;
   return btn;
 }
-function createOrUpdateToggle(container, id, text, active, tooltip = "") {
+function createOrUpdateToggle(container, id, text, active) {
   let btn = container.querySelector(`#${id}`);
   if (!btn) {
     btn = document.createElement('button');
@@ -272,7 +271,7 @@ function createOrUpdateToggle(container, id, text, active, tooltip = "") {
     btn.className = 'toggle-btn';
     container.appendChild(btn);
   }
-  btn.innerHTML = makeTooltipHtml(text, tooltip);
+  btn.textContent = text;
   btn.className = 'toggle-btn' + (active ? ' active' : '');
   return btn;
 }
@@ -309,15 +308,14 @@ function stopManualHold() {
   clickerIntervalId = null;
 }
 
-// ========== UPGRADE RENDERERS WITH TOOLTIP ==========
+// ========== UPGRADE RENDERERS WITHOUT TOOLTIP ==========
 function renderClickUpgrade() {
   let level = perClickLevel + 1;
   let cost = perClickCost * Math.pow(perClickCostMulti, perClickLevel);
   let canAfford = score >= cost;
   let nextValue = (perClickBase * (perClickLevel + 2)) * (1 + prestigeBonus / 100) * (1 + clickMultiLevel * 0.05);
   let label = `Upgrade: +10 Per Click (Level ${level}) <span class="cost-label">(${formatMoney(cost)})</span>`;
-  let tooltip = `Increases your manual click value by +10.\nCurrent: ${formatMoney(getManualClickValue())}\nNext: ${formatMoney(nextValue)}`;
-  createOrUpdateButton(clickUpgradeBox, "click-upgrade-btn", label, canAfford, "", tooltip);
+  createOrUpdateButton(clickUpgradeBox, "click-upgrade-btn", label, canAfford);
 }
 function renderAutoClickUpgrade() {
   // Toggle
@@ -330,21 +328,19 @@ function renderAutoClickUpgrade() {
   } else {
     toggleBtn.className = 'toggle-btn' + (autoClickerActive ? ' active' : '');
   }
-  toggleBtn.innerHTML = makeTooltipHtml(autoClickerActive ? "ON" : "OFF", "Toggle Standard Auto Clickers ON/OFF");
+  toggleBtn.textContent = autoClickerActive ? "ON" : "OFF";
   // Upgrade button
   let upgradeBtn = autoClickUpgradeBox.querySelector('#auto-click-upgrade-btn');
   let level = autoClickLevel + 1;
   let cost = autoClickCost * Math.pow(autoClickCostMulti, autoClickLevel);
   let canAfford = score >= cost;
-  let nextAuto = (autoClickLevel + 1) * (autoClickBase + autoClickPlusUpgradeLevel * 10) * 5 * (1 + prestigeBonus / 100);
   let label = `Upgrade: +1 Auto Clicker/sec (Level ${level}) <span class="cost-label">(${formatMoney(cost)})</span>`;
-  let tooltip = `Gains +1 auto clicker (clicks every 200ms).\nCurrent $/sec: ${formatMoney(autoClickLevel * (autoClickBase + autoClickPlusUpgradeLevel * 10) * 5 * (1 + prestigeBonus / 100))}\nNext: ${formatMoney(nextAuto)}`;
   if (!upgradeBtn) {
     upgradeBtn = document.createElement('button');
     upgradeBtn.id = "auto-click-upgrade-btn";
     autoClickUpgradeBox.appendChild(upgradeBtn);
   }
-  upgradeBtn.innerHTML = makeTooltipHtml(label, tooltip);
+  upgradeBtn.innerHTML = label;
   upgradeBtn.className = `upgrade-btn${canAfford ? " can-afford" : ""}`;
   upgradeBtn.disabled = !canAfford;
 }
@@ -359,21 +355,19 @@ function renderFastAutoClickerUpgrade() {
   } else {
     toggleBtn.className = 'toggle-btn' + (fastAutoClickerActive ? ' active' : '');
   }
-  toggleBtn.innerHTML = makeTooltipHtml(fastAutoClickerActive ? "ON" : "OFF", "Toggle Fast Auto Clickers ON/OFF");
+  toggleBtn.textContent = fastAutoClickerActive ? "ON" : "OFF";
   // Upgrade button
   let upgradeBtn = fastAutoClickerUpgradeBox.querySelector('#fast-auto-clicker-upgrade-btn');
   let level = fastAutoClickerLevel + 1;
   let cost = fastAutoClickerBaseCost * Math.pow(fastAutoClickerCostMulti, fastAutoClickerLevel);
   let canAfford = score >= cost;
-  let nextFast = (fastAutoClickerLevel + 1) * (autoClickBase + autoClickPlusUpgradeLevel * 10) * 50 * (1 + prestigeBonus / 100);
   let label = `Upgrade: +1 Fast Auto Clicker (Level ${level}) <span class="cost-label">(${formatMoney(cost)})</span>`;
-  let tooltip = `Gains +1 fast auto clicker (clicks every 20ms).\nCurrent $/sec: ${formatMoney(fastAutoClickerLevel * (autoClickBase + autoClickPlusUpgradeLevel * 10) * 50 * (1 + prestigeBonus / 100))}\nNext: ${formatMoney(nextFast)}`;
   if (!upgradeBtn) {
     upgradeBtn = document.createElement('button');
     upgradeBtn.id = "fast-auto-clicker-upgrade-btn";
     fastAutoClickerUpgradeBox.appendChild(upgradeBtn);
   }
-  upgradeBtn.innerHTML = makeTooltipHtml(label, tooltip);
+  upgradeBtn.innerHTML = label;
   upgradeBtn.className = `upgrade-btn${canAfford ? " can-afford" : ""}`;
   upgradeBtn.disabled = !canAfford;
 }
@@ -381,29 +375,24 @@ function renderAutoClickPlusUpgrade() {
   let level = autoClickPlusUpgradeLevel + 1;
   let cost = autoClickPlusUpgradeBaseCost * Math.pow(autoClickPlusUpgradeCostMulti, autoClickPlusUpgradeLevel);
   let canAfford = score >= cost;
-  let tooltip = `Each auto clicker earns +10 per click.\nCurrent Value/Click: ${formatMoney((autoClickBase + autoClickPlusUpgradeLevel * 10) * (1 + prestigeBonus / 100))}`;
   let label = `Upgrade: Auto Clicker +10 Click (Level ${level}) <span class="cost-label">(${formatMoney(cost)})</span>`;
-  createOrUpdateButton(autoClickPlusUpgradeBox, "auto-click-plus-upgrade-btn", label, canAfford, "", tooltip);
+  createOrUpdateButton(autoClickPlusUpgradeBox, "auto-click-plus-upgrade-btn", label, canAfford);
 }
 function renderClickMultiplierUpgrade() {
   let level = clickMultiLevel + 1;
   let cost = clickMultiBaseCost * Math.pow(clickMultiCostMulti, clickMultiLevel);
   let canAfford = score >= cost;
-  let tooltip = `All manual clicks are multiplied by 1.05 per level.\nCurrent bonus: +${(clickMultiLevel*5).toFixed(0)}%`;
   let label = `Upgrade: Click Multiplier +5% (Level ${level}) <span class="cost-label">(${formatMoney(cost)})</span>`;
-  createOrUpdateButton(clickMultiplierUpgradeBox, "click-multiplier-upgrade-btn", label, canAfford, "", tooltip);
+  createOrUpdateButton(clickMultiplierUpgradeBox, "click-multiplier-upgrade-btn", label, canAfford);
 }
 function renderPrestigeBox() {
   if (score >= 1_000_000_000 || prestigeLevel > 0) {
     prestigeUnlocked = true;
     let canPrestige = score >= 1_000_000_000;
     prestigeBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="prestige-btn"${canPrestige ? '' : ' disabled'}>
-          Prestige (reset for +10% income)
-        </button>
-        <span class="tooltip-text">Reset all upgrades, stats and money for +10% bonus income per Prestige</span>
-      </span>
+      <button id="prestige-btn"${canPrestige ? '' : ' disabled'}>
+        Prestige (reset for +10% income)
+      </button>
       <div style="color:#0fa; margin-top:6px;">
         Prestige Level: <b>${prestigeLevel}</b><br>
         Total Prestige Bonus: <b>+${prestigeBonus}% income</b>
@@ -422,24 +411,18 @@ function renderHoldClickerUpgrade() {
       toggleBtn = document.createElement('button');
       toggleBtn.id = 'toggle-hold-clicker';
       toggleBtn.className = 'toggle-btn' + (holdClickerActive ? ' active' : '');
-      toggleBtn.innerHTML = makeTooltipHtml(`Hold Clicker: ${holdClickerActive ? 'ON' : 'OFF'}`,
-        "Simulates holding down the main click button.");
+      toggleBtn.textContent = `Hold Clicker: ${holdClickerActive ? 'ON' : 'OFF'}`;
       holdClickerUpgradeBox.appendChild(toggleBtn);
     } else {
       toggleBtn.className = 'toggle-btn' + (holdClickerActive ? ' active' : '');
-      toggleBtn.innerHTML = makeTooltipHtml(`Hold Clicker: ${holdClickerActive ? 'ON' : 'OFF'}`,
-        "Simulates holding down the main click button.");
+      toggleBtn.textContent = `Hold Clicker: ${holdClickerActive ? 'ON' : 'OFF'}`;
     }
   } else {
     let canAfford = score >= holdClickerCost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-      Unlock Hold Clicker: Simulates always holding click <span class="cost-label">(${formatMoney(holdClickerCost)})</span>`;
-    let tooltip = "Automatically clicks as if always holding the button.";
+    let label = `Unlock Hold Clicker: Simulates always holding click <span class="cost-label">(${formatMoney(holdClickerCost)})</span>`;
     holdClickerUpgradeBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-hold-clicker-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-hold-clicker-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
   }
 }
 function startHoldClicker() {
@@ -463,18 +446,14 @@ function renderAutoBuy() {
   if (!autoBuyUnlocked) {
     let cost = autoBuyBaseCost;
     let canAfford = score >= cost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-      Unlock Auto Buy: Buys ALL upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
-    let tooltip = "Automatically buys any upgrades you can afford.";
+    let label = `Unlock Auto Buy: Buys ALL upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
     autoBuyBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-auto-buy-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-auto-buy-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
     autoBuyToggleBox.innerHTML = '';
   } else {
     autoBuyBox.innerHTML = `<span style="color:#0fa;">Auto Buy unlocked!</span>`;
-    createOrUpdateToggle(autoBuyToggleBox, "toggle-auto-buy", autoBuyActive ? "Auto Buy: ON" : "Auto Buy: OFF", autoBuyActive, "Toggle auto-buy for all upgrades.");
+    createOrUpdateToggle(autoBuyToggleBox, "toggle-auto-buy", autoBuyActive ? "Auto Buy: ON" : "Auto Buy: OFF", autoBuyActive);
   }
 }
 function runAutoBuyLoop() {
@@ -535,90 +514,70 @@ function renderClickUpgraderBuyer() {
   if (!clickUpgraderBuyerUnlocked) {
     let cost = autoBuyerCosts.click;
     let canAfford = score >= cost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-        Unlock Auto-Buyer: +10 Click upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
-    let tooltip = "Auto-buys +10 Click upgrades";
+    let label = `Unlock Auto-Buyer: +10 Click upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
     clickUpgraderBuyerBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-click-upgrader-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-click-upgrader-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
     clickUpgraderBuyerToggleBox.innerHTML = '';
   } else {
     clickUpgraderBuyerBox.innerHTML = `<span style="color:#0fa;">Auto-Buyer for +10 Click unlocked!</span>`;
-    createOrUpdateToggle(clickUpgraderBuyerToggleBox, 'toggle-click-upgrader-buyer', clickUpgraderBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', clickUpgraderBuyerActive, "Auto-buys +10 Click upgrades");
+    createOrUpdateToggle(clickUpgraderBuyerToggleBox, 'toggle-click-upgrader-buyer', clickUpgraderBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', clickUpgraderBuyerActive);
   }
 }
 function renderAutoClickerBuyer() {
   if (!autoClickerBuyerUnlocked) {
     let cost = autoBuyerCosts.auto;
     let canAfford = score >= cost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-        Unlock Auto-Buyer: Auto Clicker upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
-    let tooltip = "Auto-buys Auto Clicker upgrades";
+    let label = `Unlock Auto-Buyer: Auto Clicker upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
     autoClickerBuyerBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-auto-clicker-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-auto-clicker-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
     autoClickerBuyerToggleBox.innerHTML = '';
   } else {
     autoClickerBuyerBox.innerHTML = `<span style="color:#0fa;">Auto-Buyer for Auto Clickers unlocked!</span>`;
-    createOrUpdateToggle(autoClickerBuyerToggleBox, 'toggle-auto-clicker-buyer', autoClickerBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', autoClickerBuyerActive, "Auto-buys Auto Clicker upgrades");
+    createOrUpdateToggle(autoClickerBuyerToggleBox, 'toggle-auto-clicker-buyer', autoClickerBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', autoClickerBuyerActive);
   }
 }
 function renderAutoClickPlusBuyer() {
   if (!autoClickPlusBuyerUnlocked) {
     let cost = autoBuyerCosts.plus;
     let canAfford = score >= cost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-        Unlock Auto-Buyer: Auto Clicker +10 Click upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
-    let tooltip = "Auto-buys Auto Clicker +10 Click upgrades";
+    let label = `Unlock Auto-Buyer: Auto Clicker +10 Click upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
     autoClickPlusBuyerBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-auto-click-plus-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-auto-click-plus-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
     autoClickPlusBuyerToggleBox.innerHTML = '';
   } else {
     autoClickPlusBuyerBox.innerHTML = `<span style="color:#0fa;">Auto-Buyer for Auto Clicker +10 Click unlocked!</span>`;
-    createOrUpdateToggle(autoClickPlusBuyerToggleBox, 'toggle-auto-click-plus-buyer', autoClickPlusBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', autoClickPlusBuyerActive, "Auto-buys Auto Clicker +10 Click upgrades");
+    createOrUpdateToggle(autoClickPlusBuyerToggleBox, 'toggle-auto-click-plus-buyer', autoClickPlusBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', autoClickPlusBuyerActive);
   }
 }
 function renderFastAutoClickerBuyer() {
   if (!fastAutoClickerBuyerUnlocked) {
     let cost = fastAutoClickerBuyerBaseCost;
     let canAfford = score >= cost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-        Unlock Auto-Buyer: Fast Auto Clicker upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
-    let tooltip = "Auto-buys Fast Auto Clicker upgrades";
+    let label = `Unlock Auto-Buyer: Fast Auto Clicker upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
     fastAutoClickerBuyerBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-fast-auto-clicker-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-fast-auto-clicker-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
     fastAutoClickerBuyerToggleBox.innerHTML = '';
   } else {
     fastAutoClickerBuyerBox.innerHTML = `<span style="color:#0fa;">Auto-Buyer for Fast Auto Clickers unlocked!</span>`;
-    createOrUpdateToggle(fastAutoClickerBuyerToggleBox, 'toggle-fast-auto-clicker-buyer', fastAutoClickerBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', fastAutoClickerBuyerActive, "Auto-buys Fast Auto Clicker upgrades");
+    createOrUpdateToggle(fastAutoClickerBuyerToggleBox, 'toggle-fast-auto-clicker-buyer', fastAutoClickerBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', fastAutoClickerBuyerActive);
   }
 }
 function renderClickMultiplierBuyer() {
   if (!clickMultiplierBuyerUnlocked) {
     let cost = clickMultiplierBuyerBaseCost;
     let canAfford = score >= cost;
-    let label = `<svg class="padlock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" fill="#bbb" stroke="#bbb"/><path d="M7 11V7a5 5 0 1 1 10 0v4" fill="none" stroke="#888"/></svg>
-      Unlock Auto-Buyer: Click Multiplier upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
-    let tooltip = "Auto-buys Click Multiplier upgrades";
+    let label = `Unlock Auto-Buyer: Click Multiplier upgrades <span class="cost-label">(${formatMoney(cost)})</span>`;
     clickMultiplierBuyerBox.innerHTML = `
-      <span class="tooltip-container">
-        <button id="buy-click-multiplier-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
-        <span class="tooltip-text">${tooltip}</span>
-      </span>`;
+      <button id="buy-click-multiplier-buyer-btn" class="upgrade-btn${canAfford ? ' can-afford' : ''}" ${canAfford ? '' : 'disabled'}>${label}</button>
+    `;
     clickMultiplierBuyerToggleBox.innerHTML = '';
   } else {
     clickMultiplierBuyerBox.innerHTML = `<span style="color:#0fa;">Auto-Buyer for Click Multiplier unlocked!</span>`;
-    createOrUpdateToggle(clickMultiplierBuyerToggleBox, 'toggle-click-multiplier-buyer', clickMultiplierBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', clickMultiplierBuyerActive, "Auto-buys Click Multiplier upgrades");
+    createOrUpdateToggle(clickMultiplierBuyerToggleBox, 'toggle-click-multiplier-buyer', clickMultiplierBuyerActive ? 'Auto-Buyer: ON' : 'Auto-Buyer: OFF', clickMultiplierBuyerActive);
   }
 }
 
@@ -997,4 +956,3 @@ setInterval(() => {
 
 // ========== AUTOSAVE ==========
 setInterval(() => { saveGame(); }, 12000);
-
