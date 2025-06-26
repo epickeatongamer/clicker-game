@@ -470,40 +470,6 @@ body.light-mode .danger-btn:hover, body.light-mode .danger-btn:focus {
   transform: scale(1.05);
 }
 
-/* Modern Tooltips */
-.tooltip-container {
-  position: relative;
-  display: inline-block;
-}
-.tooltip-text {
-  visibility: hidden;
-  opacity: 0;
-  background: #2de2ff;
-  color: #181825;
-  font-size: 1em;
-  font-weight: 500;
-  text-align: left;
-  border-radius: 8px;
-  padding: 10px 16px;
-  position: absolute;
-  z-index: 99;
-  bottom: 110%;
-  left: 50%;
-  transform: translateX(-50%) scale(0.97);
-  box-shadow: 0 2px 12px #2de2ff33, 0 1px 2px #0002;
-  min-width: 180px;
-  max-width: 340px;
-  pointer-events: none;
-  transition: opacity 0.22s cubic-bezier(.27,.93,.62,.99), visibility 0.2s, transform 0.22s cubic-bezier(.27,.93,.62,.99);
-  white-space: pre-line;
-}
-.tooltip-container:hover .tooltip-text,
-.tooltip-container:focus-within .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-  transform: translateX(-50%) scale(1.05);
-}
-
 /* Responsive: shrink panels on mobile */
 @media (max-width: 900px) {
   #stats-panel, #upgrades-panel {
