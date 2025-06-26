@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clicker Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="stats-panel" id="stats-panel">
+    <h2>Stats</h2>
+    <div id="stat-playtime">Playtime: 0s</div>
+    <div id="stat-manual-clicks">Manual Clicks: 0</div>
+    <div id="stat-auto-clicks">Auto Clicks: 0</div>
+    <div id="stat-total-money">Total Money: $0.00</div>
+    <div id="stat-money-spent">Money Spent: $0.00</div>
+    <div id="stat-total-mps">$/Sec: $0.00</div>
+  </div>
+  <div class="upgrades-panel">
+    <div class="upgrades">
+      <div class="tabs">
+        <button class="tab active" data-tab="main-upgrades">Upgrades</button>
+        <button class="tab" data-tab="auto-upgrades">Auto Upgrades</button>
+      </div>
+      <div class="tab-content active" id="main-upgrades">
+        <div class="upgrade-panel">
+          <div id="click-upgrade-box"></div>
+          <div id="auto-click-upgrade-box" style="margin-top:16px;"></div>
+          <div id="auto-click-plus-upgrade-box" style="margin-top:16px;"></div>
+          <div id="auto-click-info" style="margin-top:18px;color:#7df;"></div>
+        </div>
+      </div>
+      <div class="tab-content" id="auto-upgrades">
+        <div class="upgrade-panel">
+          <div id="click-upgrader-buyer-box"></div>
+          <div id="click-upgrader-buyer-toggle-box" style="margin-bottom:32px;"></div>
+          <div id="auto-clicker-buyer-box"></div>
+          <div id="auto-clicker-buyer-toggle-box"></div>
+          <div id="auto-click-plus-buyer-box" style="margin-top:32px;"></div>
+          <div id="auto-click-plus-buyer-toggle-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="center-panel">
+    <div class="container">
+      <h1>Clicker Game</h1>
+      <div class="score">Money: $<span id="score">0.00</span></div>
+      <button id="click-btn">Click me!</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
