@@ -1,3 +1,9 @@
+// Supabase client initialization
+const SUPABASE_URL = 'https://dhjdnaegkbyezgdhmbsl.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRoamRuYWVna2J5ZXpnZGhtYnNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyNTYyNzQsImV4cCI6MjA2NjgzMjI3NH0.mPiR18GLpRWXXlNqueO-d1WqpKkwDC_Sd8Xh78BSd8';
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // ========== SETTINGS, THEME, FORMAT ==========
 let numberFormatMode = localStorage.getItem('numberFormatMode') || 'short';
 
@@ -956,3 +962,99 @@ setInterval(() => {
 
 // ========== AUTOSAVE ==========
 setInterval(() => { saveGame(); }, 12000);
+
+// ========== SUPABASE AUTH FUNCTIONS ==========
+// You can wire these to your login UI buttons/forms
+
+async function signUp(email, password) {
+  const { error } = await supabase.auth.signUp({ email, password });
+  if (error) alert('Sign up error: ' + error.message);
+  else alert('Sign up successful! Please check your email to verify your account.');
+}
+
+async function signIn(email, password) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) alert('Sign in error: ' + error.message);
+  else {
+    alert('Signed in successfully!');
+    await loadProgressFromSupabase();
+    fullUpdateAll();
+  }
+}
+
+async function signOut() {
+  await supabase.auth.signOut();
+  alert('Signed out!');
+  location.reload();
+}
+
+// ---------- Save progress to Supabase ----------
+async function saveProgressToSupabase() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const saveData = {
+    user_id: user.id,
+    score,
+    perClickLevel,
+    autoClickLevel,
+    autoClickPlusUpgradeLevel,
+    fastAutoClickerLevel,
+    clickMultiLevel,
+    prestigeLevel,
+    prestigeBonus,
+    stat_playtime,
+    stat_manual_clicks,
+    stat_auto_clicks,
+    stat_total_money,
+    stat_money_spent,
+    clickUpgraderBuyerUnlocked, clickUpgraderBuyerActive,
+    autoClickerBuyerUnlocked, autoClickerBuyerActive,
+    autoClickPlusBuyerUnlocked, autoClickPlusBuyerActive,
+    fastAutoClickerBuyerUnlocked, fastAutoClickerBuyerActive,
+    clickMultiplierBuyerUnlocked, clickMultiplierBuyerActive,
+    autoBuyUnlocked, autoBuyActive,
+    holdClickerUnlocked, holdClickerActive,
+    autoClickerActive, fastAutoClickerActive,
+    theme: themeSelect.value,
+    numberFormatMode
+  };
+
+  const { error } = await supabase
+    .from('player_progress')
+    .upsert(saveData);
+
+  if (error) console.error('Save error:', error.message);
+  else console.log('Progress saved to Supabase.');
+}
+
+// ---------- Load progress from Supabase ----------
+async function loadProgressFromSupabase() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data, error } = await supabase
+    .from('player_progress')
+    .select('*')
+    .eq('user_id', user.id)
+    .single();
+
+  if (error) {
+    console.log('No saved progress found or error:', error.message);
+    return;
+  }
+
+  Object.assign(window, data);
+  if (data.theme) {
+    themeSelect.value = data.theme;
+    setTheme(data.theme);
+  }
+  if (data.numberFormatMode) {
+    numberFormatSelect.value = data.numberFormatMode;
+    numberFormatMode = data.numberFormatMode;
+  }
+  fullUpdateAll();
+}
+
+// You can call saveProgressToSupabase() and loadProgressFromSupabase() instead of localStorage versions
+// e.g. override saveGame and loadGame or add buttons to trigger them
