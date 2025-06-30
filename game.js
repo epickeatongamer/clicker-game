@@ -1,7 +1,6 @@
-// Supabase initialization
 const SUPABASE_URL = 'https://dhjdnaegkbyezgdhmbsl.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRoamRuYWVna2J5ZXpnZGhtYnNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyNTYyNzQsImV4cCI6MjA2NjgzMjI3NH0.mPiR18GLpRWXXlNqueO-d1WqpKkwDC_Sd8Xh78BSd8';
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // DOM elements
 const signOutBtn = document.getElementById('sign-out-btn');
@@ -396,7 +395,6 @@ document.addEventListener('click', e => {
       }
       break;
     }
-    // Add buyer toggle handlers and other buttons as needed here...
   }
 });
 
@@ -542,7 +540,7 @@ function stopHoldClicker() {
 
 // Save & load progress
 async function saveProgressToSupabase() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return;
   const saveData = {
     user_id: user.id,
@@ -577,7 +575,7 @@ async function saveProgressToSupabase() {
     fastAutoClickerActive,
     numberFormatMode
   };
-  const { error } = await supabase
+  const { error } = await supabaseClient
     .from('player_progress')
     .upsert(saveData);
   if (error) console.error('Save error:', error.message);
@@ -585,9 +583,9 @@ async function saveProgressToSupabase() {
 }
 
 async function loadProgressFromSupabase() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return;
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('player_progress')
     .select('*')
     .eq('user_id', user.id)
@@ -632,13 +630,13 @@ async function loadProgressFromSupabase() {
 
 // Sign-out button
 signOutBtn.onclick = async () => {
-  await supabase.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location.href = 'login.html';
 };
 
 // On page load auth check and load progress
 window.onload = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) {
     window.location.href = 'login.html';
   } else {
