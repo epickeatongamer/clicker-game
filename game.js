@@ -272,7 +272,7 @@ function renderAutoBuy() {
   createOrUpdateToggle(autoBuyToggleBox, "auto-buy-toggle-btn", `Auto Buy: ${autoBuyActive ? "ON" : "OFF"}`, autoBuyActive);
 }
 
-// Event listeners
+// Event delegation for clicks
 document.addEventListener('click', e => {
   if (!e.target) return;
   switch (e.target.id) {
