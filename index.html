@@ -1,115 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Clicker Game</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Clicker Game with Supabase Auth</title>
+<link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- SETTINGS BUTTON (top left) -->
-  <button id="settings-btn"
-    style="position:fixed;top:18px;left:32px;z-index:20;font-size:1.2em;padding:8px 20px;border-radius:10px;background:#2de2ff;color:#111;border:none;box-shadow:0 2px 12px #00fff944;cursor:pointer;">
-    ⚙️ Settings
-  </button>
 
-  <!-- SETTINGS MODAL -->
-  <div id="settings-modal" class="modal-bg" style="display:none;">
-    <div class="modal-content">
-      <h2 style="margin-top:0;">Settings</h2>
-      <div style="margin:20px 0;">
-        <label style="font-size:1.1em;">
-          Theme:
-          <select id="theme-select">
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-          </select>
-        </label>
-      </div>
-      <div style="margin:20px 0;">
-        <label style="font-size:1.1em;">
-          Number Format:
-          <select id="number-format-select">
-            <option value="short">Short (K/M/B)</option>
-            <option value="sci">Scientific</option>
-            <option value="full">Full</option>
-          </select>
-        </label>
-      </div>
-      <div style="margin:16px 0 0 0;">
-        <button id="save-btn" class="primary-btn" style="width:100%;">Save Now</button>
-      </div>
-      <div style="margin:16px 0 0 0;">
-        <button id="reset-btn" class="danger-btn" style="width:100%;">Reset Progress</button>
-      </div>
-      <div style="text-align:right;">
-        <button id="close-settings-btn" class="modal-close">Close</button>
-      </div>
-    </div>
+<header>
+  <h1>Clicker Game</h1>
+  <div id="auth-status">
+    <span id="user-email"></span>
+    <button id="sign-out-btn" style="display:none;">Sign Out</button>
   </div>
+</header>
 
-  <div id="container">
-    <!-- Stats Panel (Left) -->
-    <div id="stats-panel">
-      <div class="stats-title">Stats</div>
-      <div class="stat-line" id="stat-playtime">Playtime: 0s</div>
-      <div class="stat-line" id="stat-manual-clicks">Manual Clicks: 0</div>
-      <div class="stat-line" id="stat-auto-clicks">Auto Clicks: 0</div>
-      <div class="stat-line" id="stat-total-money">Total Money: $0.00</div>
-      <div class="stat-line" id="stat-money-spent">Money Spent: $0.00</div>
-      <div class="stat-line" id="stat-total-mps">$ /Sec: $0.00</div>
-    </div>
+<section id="auth-section">
+  <h2>Login / Signup</h2>
+  <input type="email" id="email-input" placeholder="Email" />
+  <input type="password" id="password-input" placeholder="Password" />
+  <button id="sign-in-btn">Sign In</button>
+  <button id="sign-up-btn">Sign Up</button>
+</section>
 
-    <!-- Main Clicker Panel (Center) -->
-    <div id="main-panel">
-      <div id="score-title">Your Money</div>
-      <div id="score">0.00</div>
-      <button id="click-btn">CLICK</button>
-      <div id="auto-click-info"></div>
-      <div id="prestige-box"></div>
-    </div>
+<section id="game-section" style="display:none;">
+  <!-- Your existing game UI here -->
+  <button id="clicker-btn">Click Me!</button>
+  <div id="score-display">Score: 0</div>
+  <!-- Add your other game elements here -->
+</section>
 
-    <!-- Upgrades Panel (Right) -->
-    <div id="upgrades-panel">
-      <div class="tab-header">
-        <button class="tab active" data-tab="upgrades-tab">Upgrades</button>
-        <button class="tab" data-tab="auto-upgrades-tab">Auto Upgrades</button>
-      </div>
-      <div id="upgrades-content">
-        <!-- Upgrades Tab -->
-        <div class="tab-content active" id="upgrades-tab">
-          <div id="click-upgrade-box"></div>
-          <div style="display:flex; align-items:center; gap:8px;" id="auto-click-upgrade-row">
-            <div id="auto-clicker-onoff-toggle-box"></div>
-            <div id="auto-click-upgrade-box" style="flex:1"></div>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;" id="fast-auto-clicker-upgrade-row">
-            <div id="fast-auto-clicker-onoff-toggle-box"></div>
-            <div id="fast-auto-clicker-upgrade-box" style="flex:1"></div>
-          </div>
-          <div id="auto-click-plus-upgrade-box"></div>
-          <div id="click-multiplier-upgrade-box"></div>
-        </div>
-        <!-- Auto Upgrades Tab -->
-        <div class="tab-content" id="auto-upgrades-tab">
-          <div id="click-upgrader-buyer-box"></div>
-          <div id="click-upgrader-buyer-toggle-box"></div>
-          <div id="auto-clicker-buyer-box"></div>
-          <div id="auto-clicker-buyer-toggle-box"></div>
-          <div id="auto-click-plus-buyer-box"></div>
-          <div id="auto-click-plus-buyer-toggle-box"></div>
-          <div id="fast-auto-clicker-buyer-box"></div>
-          <div id="fast-auto-clicker-buyer-toggle-box"></div>
-          <div id="click-multiplier-buyer-box"></div>
-          <div id="click-multiplier-buyer-toggle-box"></div>
-          <div id="auto-buy-box"></div>
-          <div id="auto-buy-toggle-box"></div>
-          <div id="hold-clicker-upgrade-box"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+<script src="script.js"></script>
 
-  <script src="script.js"></script>
+<script>
+  // Initialize Supabase client here for use in inline handlers if needed
+  const SUPABASE_URL = 'https://dhjdnaegkbyezgdhmbsl.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRoamRuYWVna2J5ZXpnZGhtYnNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyNTYyNzQsImV4cCI6MjA2NjgzMjI3NH0.mPiR18GLpRWXXlNqueO-d1WqpKkwDC_Sd8Xh78BSd8';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // UI elements
+  const emailInput = document.getElementById('email-input');
+  const passwordInput = document.getElementById('password-input');
+  const signInBtn = document.getElementById('sign-in-btn');
+  const signUpBtn = document.getElementById('sign-up-btn');
+  const signOutBtn = document.getElementById('sign-out-btn');
+  const userEmailSpan = document.getElementById('user-email');
+  const authSection = document.getElementById('auth-section');
+  const gameSection = document.getElementById('game-section');
+
+  // Sign up function
+  signUpBtn.addEventListener('click', async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) alert('Sign up error: ' + error.message);
+    else alert('Check your email to verify your account.');
+  });
+
+  // Sign in function
+  signInBtn.addEventListener('click', async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) alert('Sign in error: ' + error.message);
+    else window.location.reload(); // reload to update UI
+  });
+
+  // Sign out function
+  signOutBtn.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  });
+
+  // Check auth state on page load
+  window.onload = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      userEmailSpan.textContent = `Logged in as ${user.email}`;
+      signOutBtn.style.display = 'inline-block';
+      authSection.style.display = 'none';
+      gameSection.style.display = 'block';
+      // Call your game initialization/load here, e.g., loadProgress()
+    } else {
+      userEmailSpan.textContent = '';
+      signOutBtn.style.display = 'none';
+      authSection.style.display = 'block';
+      gameSection.style.display = 'none';
+    }
+  };
+</script>
+
 </body>
 </html>
