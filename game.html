@@ -1,64 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Clicker Game</title>
-<link rel="stylesheet" href="game-page.css" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="game.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clicker Game</title>
+  <link rel="stylesheet" href="game-page.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="game.js"></script>
 </head>
 <body>
+  <header>
+    <div>
+      <span id="user-email">Loading...</span>
+      <button id="sign-out-btn">Sign Out</button>
+    </div>
+  </header>
 
-<header>
-  <h1>Clicker Game</h1>
-  <div id="auth-status">
-    <span id="user-email"></span>
-    <button id="sign-out-btn">Sign Out</button>
-  </div>
-</header>
+  <main id="container">
+    <!-- Stats Panel (Left) -->
+    <div id="stats-panel">
+      <p id="stat-playtime">Playtime: 0s</p>
+      <p id="stat-manual-clicks">Manual Clicks: 0</p>
+      <p id="stat-auto-clicks">Auto Clicks: 0</p>
+      <p id="stat-total-money">Total Money: $0</p>
+      <p id="stat-money-spent">Money Spent: $0</p>
+      <p id="stat-total-mps">$ /Sec: $0</p>
+    </div>
 
-<main id="game-section">
-  <button id="click-btn">Click Me!</button>
-  <div id="score">Loading...</div>
+    <!-- Main Panel (Center) -->
+    <div id="main-panel">
+      <button id="click-btn">Click Me!</button>
+      <div id="score">Loading...</div>
 
-  <div id="click-upgrade-box"></div>
-  <div id="auto-click-upgrade-box"></div>
-  <div id="auto-click-plus-upgrade-box"></div>
-  <div id="fast-auto-clicker-upgrade-box"></div>
-  <div id="click-multiplier-upgrade-box"></div>
+      <div id="prestige-box"></div>
+      <div id="auto-click-info"></div>
 
-  <div id="auto-click-info"></div>
-  <div id="prestige-box"></div>
-  <div id="auto-buy-box"></div>
-  <div id="auto-buy-toggle-box"></div>
-  <div id="hold-clicker-upgrade-box"></div>
+      <div id="auto-buy-box"></div>
+      <div id="auto-buy-toggle-box"></div>
+      <div id="hold-clicker-upgrade-box"></div>
+    </div>
 
-  <div id="auto-clicker-onoff-toggle-box"></div>
-  <div id="fast-auto-clicker-onoff-toggle-box"></div>
+    <!-- Upgrades Panel (Right) -->
+    <div id="upgrades-panel">
+      <div id="upgrades-content">
+        <div id="click-upgrade-box"></div>
+        <div id="auto-click-upgrade-box"></div>
+        <div id="auto-click-plus-upgrade-box"></div>
+        <div id="fast-auto-clicker-upgrade-box"></div>
+        <div id="click-multiplier-upgrade-box"></div>
 
-  <div id="click-upgrader-buyer-box"></div>
-  <div id="click-upgrader-buyer-toggle-box"></div>
-  <div id="auto-clicker-buyer-box"></div>
-  <div id="auto-clicker-buyer-toggle-box"></div>
-  <div id="auto-click-plus-buyer-box"></div>
-  <div id="auto-click-plus-buyer-toggle-box"></div>
-  <div id="fast-auto-clicker-buyer-box"></div>
-  <div id="fast-auto-clicker-buyer-toggle-box"></div>
-  <div id="click-multiplier-buyer-box"></div>
-  <div id="click-multiplier-buyer-toggle-box"></div>
+        <div id="auto-clicker-onoff-toggle-box"></div>
+        <div id="fast-auto-clicker-onoff-toggle-box"></div>
 
-  <div id="stats-panel">
-    <p id="stat-playtime"></p>
-    <p id="stat-manual-clicks"></p>
-    <p id="stat-auto-clicks"></p>
-    <p id="stat-total-money"></p>
-    <p id="stat-money-spent"></p>
-    <p id="stat-total-mps"></p>
-  </div>
-
-  <!-- Include settings modal markup here if you have one -->
-</main>
-
+        <div id="click-upgrader-buyer-box"></div>
+        <div id="click-upgrader-buyer-toggle-box"></div>
+        <div id="auto-clicker-buyer-box"></div>
+        <div id="auto-clicker-buyer-toggle-box"></div>
+        <div id="auto-click-plus-buyer-box"></div>
+        <div id="auto-click-plus-buyer-toggle-box"></div>
+        <div id="fast-auto-clicker-buyer-box"></div>
+        <div id="fast-auto-clicker-buyer-toggle-box"></div>
+        <div id="click-multiplier-buyer-box"></div>
+        <div id="click-multiplier-buyer-toggle-box"></div>
+      </div>
+    </div>
+  </main>
 </body>
 </html>
