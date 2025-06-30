@@ -1,3 +1,4 @@
+/* ======= Base Reset and Body Styling ======= */
 body, html {
   margin: 0;
   padding: 0;
@@ -6,8 +7,151 @@ body, html {
   font-family: Arial, Helvetica, sans-serif;
   color: #fff;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ======= Header Styling ======= */
+header {
+  width: 100%;
+  background-color: #1f1f1f;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 1px solid #444;
+  z-index: 10;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #0ff;
+}
+
+#auth-status {
+  font-size: 14px;
+  color: #ccc;
+}
+
+#auth-status button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: #0ff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #121212;
+  transition: background-color 0.3s ease;
+}
+
+#auth-status button:hover {
+  background-color: #0cc;
+}
+
+/* ======= Sections Styling ======= */
+section {
+  margin-top: 40px;
+  width: 320px;
+  background: #222;
+  padding: 20px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  z-index: 10;
+}
+
+/* Login / Signup Section */
+#auth-section h2 {
+  margin-top: 0;
+  color: #0ff;
+  text-align: center;
+}
+
+input[type="email"],
+input[type="password"] {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+  padding: 10px 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #111;
+  color: #eee;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #0ff;
+}
+
+/* Buttons styling */
+button {
+  width: 48%;
+  padding: 10px 0;
+  margin: 8px 1%;
+  font-size: 16px;
+  background-color: #0ff;
+  color: #121212;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #0cc;
+  transform: scale(1.05);
+}
+
+/* Game Section */
+#game-section {
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Clicker button */
+#clicker-btn {
+  font-size: 24px;
+  padding: 20px 40px;
+  background: linear-gradient(180deg,#3ad2c6,#2d9bfc 80%);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+  transition: box-shadow 0.13s, background 0.14s, transform 0.15s cubic-bezier(.3,1.5,.6,1);
+  box-shadow: 0 2px 12px #00fff844, 0 0.5px 2px #0006;
+  margin-bottom: 32px;
+}
+
+#clicker-btn:hover, #clicker-btn:focus {
+  background: linear-gradient(180deg,#49ffe0 30%,#2d9bfc 90%);
+  box-shadow: 0 3px 24px #00fff899, 0 1.5px 8px #0009;
+  transform: scale(1.06);
+}
+
+/* Score display */
+#score-display {
+  margin-top: 15px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #0ff;
+}
+
+/* ======= Your Existing Game CSS ======= */
+
+/* Container */
 #container {
   display: flex;
   flex-direction: row;
