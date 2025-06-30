@@ -4,66 +4,67 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clicker Game</title>
-  <link rel="stylesheet" href="game-page.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="game.js"></script>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header>
-    <div>
-      <span id="user-email">Loading...</span>
-      <button id="sign-out-btn">Sign Out</button>
-    </div>
+    <div id="user-info" style="color: white; padding: 10px;">User: <span id="user-email">guest@example.com</span> | <button id="sign-out-btn">Sign Out</button></div>
   </header>
 
-  <main id="container">
-    <!-- Stats Panel (Left) -->
-    <div id="stats-panel">
-      <p id="stat-playtime">Playtime: 0s</p>
-      <p id="stat-manual-clicks">Manual Clicks: 0</p>
-      <p id="stat-auto-clicks">Auto Clicks: 0</p>
-      <p id="stat-total-money">Total Money: $0</p>
-      <p id="stat-money-spent">Money Spent: $0</p>
-      <p id="stat-total-mps">$ /Sec: $0</p>
-    </div>
+  <main style="display: flex; gap: 20px; padding: 20px; background-color: #000; color: white; min-height: 90vh;">
 
-    <!-- Main Panel (Center) -->
-    <div id="main-panel">
-      <button id="click-btn">Click Me!</button>
-      <div id="score">Loading...</div>
+    <!-- Left panel: Stats -->
+    <section id="stats-panel" style="flex: 1; max-width: 200px;">
+      <p>Playtime: <span id="playtime">0s</span></p>
+      <p>Manual Clicks: <span id="manual-clicks">0</span></p>
+      <p>Auto Clicks: <span id="auto-clicks">0</span></p>
+      <p>Total Money: <span id="total-money">$0</span></p>
+      <p>Money Spent: <span id="money-spent">$0</span></p>
+      <p>$ / Sec: <span id="money-per-sec">$0</span></p>
+    </section>
 
-      <div id="prestige-box"></div>
-      <div id="auto-click-info"></div>
+    <!-- Center panel: Main click button -->
+    <section id="clicker-panel" style="flex: 2; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <button id="click-btn" style="font-size: 2rem; padding: 20px 40px; background: linear-gradient(to right, #00ffff, #8365c7); border: none; border-radius: 10px; cursor: pointer; color: black; font-weight: bold;">
+        Click Me!
+      </button>
+      <h2 id="money-display" style="margin-top: 10px;">$0</h2>
 
-      <div id="auto-buy-box"></div>
-      <div id="auto-buy-toggle-box"></div>
-      <div id="hold-clicker-upgrade-box"></div>
-    </div>
-
-    <!-- Upgrades Panel (Right) -->
-    <div id="upgrades-panel">
-      <div id="upgrades-content">
-        <div id="click-upgrade-box"></div>
-        <div id="auto-click-upgrade-box"></div>
-        <div id="auto-click-plus-upgrade-box"></div>
-        <div id="fast-auto-clicker-upgrade-box"></div>
-        <div id="click-multiplier-upgrade-box"></div>
-
-        <div id="auto-clicker-onoff-toggle-box"></div>
-        <div id="fast-auto-clicker-onoff-toggle-box"></div>
-
-        <div id="click-upgrader-buyer-box"></div>
-        <div id="click-upgrader-buyer-toggle-box"></div>
-        <div id="auto-clicker-buyer-box"></div>
-        <div id="auto-clicker-buyer-toggle-box"></div>
-        <div id="auto-click-plus-buyer-box"></div>
-        <div id="auto-click-plus-buyer-toggle-box"></div>
-        <div id="fast-auto-clicker-buyer-box"></div>
-        <div id="fast-auto-clicker-buyer-toggle-box"></div>
-        <div id="click-multiplier-buyer-box"></div>
-        <div id="click-multiplier-buyer-toggle-box"></div>
+      <div id="auto-stats" style="color: white; margin-top: 10px; text-align: center;">
+        <div>Standard Auto Clickers: <span id="standard-auto-count">0</span> | Fast Auto Clickers: <span id="fast-auto-count">0</span></div>
+        <div>Auto Value/Click: $<span id="auto-value-per-click">0</span></div>
+        <div>Auto $/Sec: $<span id="auto-money-per-sec">0</span> (Standard: $<span id="standard-auto-money-per-sec">0</span> | Fast: $<span id="fast-auto-money-per-sec">0</span>)</div>
       </div>
-    </div>
+
+      <div id="auto-buy-controls" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+        <button id="unlock-auto-buyer-btn" disabled style="padding: 10px; background: #444; border: none; border-radius: 8px; color: #ccc;">Unlock Auto Buyer ($1.00M)</button>
+        <button id="auto-buy-toggle-btn" style="padding: 10px; border-radius: 20px; background: #663399; color: white; border: 1px solid #8866cc; cursor: pointer;">Auto Buy: OFF</button>
+        <button id="hold-clicker-btn" disabled style="padding: 10px; background: #444; border: none; border-radius: 8px; color: #ccc;">Hold Clicker Upgrade ($500.00K)</button>
+      </div>
+    </section>
+
+    <!-- Right panel: Upgrades Tabs -->
+    <section id="upgrades-container" style="flex: 1; max-width: 300px;">
+
+      <div id="tab-buttons" style="display: flex; justify-content: space-around; margin-bottom: 10px;">
+        <button id="btn-upgrades" class="tab-button active" style="flex: 1; padding: 10px; cursor: pointer; background: linear-gradient(to right, #00ffff, #8365c7); border: none; color: black; font-weight: bold;">Upgrades</button>
+        <button id="btn-auto-upgrades" class="tab-button" style="flex: 1; padding: 10px; cursor: pointer; background: #555; border: none; color: white; font-weight: bold;">Auto Upgrades</button>
+      </div>
+
+      <div id="tab-content" style="background: #222; padding: 10px; border-radius: 8px; max-height: 70vh; overflow-y: auto;">
+        <div id="upgrades-tab" class="tab active" style="display: block;">
+          <!-- Normal upgrades appended here -->
+        </div>
+        <div id="auto-upgrades-tab" class="tab" style="display: none;">
+          <!-- Auto upgrades appended here -->
+        </div>
+      </div>
+
+    </section>
+
   </main>
+
+  <script src="game.js"></script>
 </body>
 </html>
