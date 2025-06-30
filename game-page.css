@@ -1,0 +1,249 @@
+/* === Reset & base === */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* === Container Layout === */
+#container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Stats panel (left) */
+#stats-panel {
+  width: 250px;
+  background-color: #111;
+  padding: 20px;
+  box-shadow: inset -2px 0 5px #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+}
+
+#stats-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+#stats-panel::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 3px;
+}
+
+/* Main panel (center) */
+#main-panel {
+  flex-grow: 1;
+  max-width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Click button */
+#click-btn {
+  font-size: 2.5rem;
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0ff, #aaf);
+  color: #000;
+  font-weight: bold;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#click-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px #0ff, 0 0 20px #aaf;
+}
+
+/* Score display */
+#score {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Prestige box */
+#prestige-box {
+  margin: 15px 0;
+}
+
+/* Auto click info */
+#auto-click-info {
+  margin: 15px 0 40px 0;
+  font-size: 1rem;
+  color: #49ffe0;
+  min-height: 80px;
+}
+
+/* Upgrades panel (right) */
+#upgrades-panel {
+  width: 320px;
+  background-color: #111;
+  padding: 20px;
+  box-shadow: inset 2px 0 5px #222;
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#upgrades-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+#upgrades-panel::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 3px;
+}
+
+/* Container inside upgrades panel for content */
+#upgrades-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Upgrade buttons */
+.upgrade-btn {
+  background: linear-gradient(135deg, #8365c7, #aa00ff);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.upgrade-btn:hover:not(:disabled) {
+  transform: scale(1.07);
+  box-shadow: 0 0 10px #aa00ff;
+}
+
+.upgrade-btn:disabled {
+  background: #444;
+  cursor: not-allowed;
+  color: #888;
+}
+
+/* Additional classes for buttons that can be afforded */
+.can-afford {
+  background: linear-gradient(135deg, #00ffff, #8365c7);
+  color: #000;
+  font-weight: 900;
+}
+
+/* Toggle buttons */
+.toggle-btn {
+  background: #222;
+  border: 2px solid #8365c7;
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+  color: #aaa;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.15s ease;
+  user-select: none;
+}
+
+.toggle-btn.active {
+  background-color: #8365c7;
+  color: #000;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.1);
+  color: #fff;
+}
+
+/* Stats panel text lines */
+#stats-panel > div {
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+/* Scrollbar fixes for all panels */
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  #stats-panel, #upgrades-panel {
+    width: 200px;
+  }
+  #main-panel {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  #container {
+    flex-direction: column;
+  }
+  #stats-panel, #upgrades-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    box-shadow: none;
+  }
+  #main-panel {
+    max-width: 100%;
+    margin: 10px auto;
+  }
+}
+
+/* Misc */
+.cost-label {
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: #ddd;
+}
+
+.auto-stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0;
+}
+
+.auto-label {
+  font-weight: 600;
+  color: #aaffff;
+}
