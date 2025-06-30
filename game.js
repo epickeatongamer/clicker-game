@@ -187,7 +187,7 @@ function createOrUpdateToggle(container, id, text, active) {
   return btn;
 }
 
-// Render functions for upgrades & toggles (all included)
+// Render functions for upgrades & toggles
 function renderClickUpgrade() {
   const level = perClickLevel + 1;
   const cost = perClickCostBase * Math.pow(perClickCostMulti, perClickLevel);
@@ -540,8 +540,9 @@ function stopHoldClicker() {
 
 // Save & load progress
 async function saveProgressToSupabase() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) return;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) return;
+  const user = session.user;
   const saveData = {
     user_id: user.id,
     score,
@@ -583,8 +584,9 @@ async function saveProgressToSupabase() {
 }
 
 async function loadProgressFromSupabase() {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) return;
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) return;
+  const user = session.user;
   const { data, error } = await supabaseClient
     .from('player_progress')
     .select('*')
@@ -636,11 +638,11 @@ signOutBtn.onclick = async () => {
 
 // On page load auth check and load progress
 window.onload = async () => {
-  const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
     window.location.href = 'login.html';
   } else {
-    userEmailSpan.textContent = `Logged in as ${user.email}`;
+    userEmailSpan.textContent = `Logged in as ${session.user.email}`;
     await loadProgressFromSupabase();
     fullUpdateAll();
   }
