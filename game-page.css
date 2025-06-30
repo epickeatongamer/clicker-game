@@ -1,249 +1,234 @@
-/* === Reset & base === */
-* {
-  box-sizing: border-box;
-}
-
+/* Base resets */
 body, html {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  height: 100%;
+  background-color: #121212;
+  color: #eee;
   font-family: Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
   overflow: hidden;
 }
 
-/* === Container Layout === */
-#container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-}
+/* Container flex is in HTML inline styles */
 
-/* Stats panel (left) */
+/* Stats Panel (Left) */
 #stats-panel {
-  width: 250px;
-  background-color: #111;
-  padding: 20px;
-  box-shadow: inset -2px 0 5px #222;
+  background-color: #1e1e1e;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #555 transparent;
+  gap: 0.7rem;
+  font-size: 1rem;
 }
 
-#stats-panel::-webkit-scrollbar {
-  width: 6px;
+#stats-panel div {
+  user-select: none;
 }
 
-#stats-panel::-webkit-scrollbar-thumb {
-  background-color: #555;
-  border-radius: 3px;
+#sign-out-btn {
+  margin-top: auto;
+  background-color: #bb2222;
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-/* Main panel (center) */
+#sign-out-btn:hover {
+  background-color: #d43737;
+}
+
+/* Main Panel (Center) */
 #main-panel {
   flex-grow: 1;
-  max-width: 600px;
-  margin: auto;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  gap: 1rem;
+  user-select: none;
+}
+
+#main-panel h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+#click-btn {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #00d2ff, #9287ff);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #000;
+  box-shadow: 0 4px 10px rgba(0, 210, 255, 0.6);
+  transition: box-shadow 0.3s ease;
+}
+
+#click-btn:hover {
+  box-shadow: 0 6px 14px rgba(0, 210, 255, 0.9);
+}
+
+#score {
+  font-size: 2rem;
+  font-weight: 700;
+  user-select: text;
+}
+
+#auto-click-info {
+  color: #49ffe0;
+  font-weight: 700;
+  margin-top: 1rem;
+  white-space: pre-line;
+  user-select: text;
+}
+
+/* Upgrades Panel (Right) */
+#upgrades-panel {
+  background-color: #1b1b1b;
+  padding: 1rem;
+  width: 25%;
+  overflow-y: auto;
+  user-select: none;
+}
+
+#upgrades-panel h2 {
+  color: #9f9f9f;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+/* Upgrade Buttons */
+.upgrade-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  background: linear-gradient(90deg, #00d2ff, #9287ff);
+  color: #000;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 210, 255, 0.5);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upgrade-btn:disabled,
+.upgrade-btn[disabled] {
+  background: #444444;
+  color: #777;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.upgrade-btn.can-afford:hover:not(:disabled) {
+  background: linear-gradient(90deg, #00eaff, #a487ff);
+  box-shadow: 0 5px 12px rgba(0, 230, 255, 0.8);
+}
+
+/* Cost label inside buttons */
+.upgrade-btn .cost-label {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #222;
+  background-color: #e0e0e0;
+  padding: 0 0.3rem;
+  border-radius: 4px;
+}
+
+/* Toggle Buttons */
+.toggle-btn {
+  margin-left: 1rem;
+  min-width: 50px;
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  border: 2px solid #8c6ff7;
+  background-color: #7a67d9;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  flex-shrink: 0;
   text-align: center;
 }
 
-/* Click button */
-#click-btn {
-  font-size: 2.5rem;
-  padding: 20px 40px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #0ff, #aaf);
+.toggle-btn.active {
+  background-color: #49ffe0;
+  border-color: #00b6a0;
   color: #000;
-  font-weight: bold;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-#click-btn:hover:not(:disabled) {
-  transform: scale(1.1);
-  box-shadow: 0 0 10px #0ff, 0 0 20px #aaf;
-}
-
-/* Score display */
-#score {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-/* Prestige box */
-#prestige-box {
-  margin: 15px 0;
-}
-
-/* Auto click info */
-#auto-click-info {
-  margin: 15px 0 40px 0;
-  font-size: 1rem;
-  color: #49ffe0;
-  min-height: 80px;
-}
-
-/* Upgrades panel (right) */
-#upgrades-panel {
-  width: 320px;
-  background-color: #111;
-  padding: 20px;
-  box-shadow: inset 2px 0 5px #222;
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #555 transparent;
+.upgrade-btn-container {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  justify-content: space-between;
+  align-items: center;
 }
 
+/* Scrollbar styling for upgrades panel */
 #upgrades-panel::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+#upgrades-panel::-webkit-scrollbar-track {
+  background: #1b1b1b;
 }
 
 #upgrades-panel::-webkit-scrollbar-thumb {
   background-color: #555;
-  border-radius: 3px;
-}
-
-/* Container inside upgrades panel for content */
-#upgrades-content {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Upgrade buttons */
-.upgrade-btn {
-  background: linear-gradient(135deg, #8365c7, #aa00ff);
-  border: none;
-  border-radius: 10px;
-  padding: 12px;
-  font-size: 1rem;
-  color: #fff;
-  cursor: pointer;
-  font-weight: bold;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.upgrade-btn:hover:not(:disabled) {
-  transform: scale(1.07);
-  box-shadow: 0 0 10px #aa00ff;
-}
-
-.upgrade-btn:disabled {
-  background: #444;
-  cursor: not-allowed;
-  color: #888;
-}
-
-/* Additional classes for buttons that can be afforded */
-.can-afford {
-  background: linear-gradient(135deg, #00ffff, #8365c7);
-  color: #000;
-  font-weight: 900;
-}
-
-/* Toggle buttons */
-.toggle-btn {
-  background: #222;
-  border: 2px solid #8365c7;
-  border-radius: 20px;
-  padding: 8px 15px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 8px;
-  color: #aaa;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.15s ease;
-  user-select: none;
-}
-
-.toggle-btn.active {
-  background-color: #8365c7;
-  color: #000;
-}
-
-.toggle-btn:hover {
-  transform: scale(1.1);
-  color: #fff;
-}
-
-/* Stats panel text lines */
-#stats-panel > div {
-  margin-bottom: 12px;
-  font-size: 1rem;
-}
-
-/* Scrollbar fixes for all panels */
-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-body::-webkit-scrollbar-thumb {
-  background-color: #555;
   border-radius: 4px;
 }
 
-/* Responsive tweaks */
-@media (max-width: 1024px) {
-  #stats-panel, #upgrades-panel {
-    width: 200px;
-  }
-  #main-panel {
-    max-width: 400px;
-  }
+/* Prestige button */
+#prestige-box button {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  width: 100%;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff6a00, #ee0979);
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(255, 105, 0, 0.7);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (max-width: 600px) {
+#prestige-box button:disabled,
+#prestige-box button[disabled] {
+  background: #444444;
+  color: #777;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
   #container {
     flex-direction: column;
   }
   #stats-panel, #upgrades-panel {
-    position: relative;
     width: 100%;
     height: auto;
-    box-shadow: none;
+    max-height: 25vh;
+    overflow-x: auto;
+    display: flex;
+    flex-wrap: nowrap;
   }
   #main-panel {
-    max-width: 100%;
-    margin: 10px auto;
+    flex-grow: 0;
+    padding: 1rem 0.5rem;
   }
-}
-
-/* Misc */
-.cost-label {
-  font-size: 0.9rem;
-  font-weight: normal;
-  color: #ddd;
-}
-
-.auto-stats-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 3px 0;
-}
-
-.auto-label {
-  font-weight: 600;
-  color: #aaffff;
 }
